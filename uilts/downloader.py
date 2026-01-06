@@ -1,17 +1,11 @@
 import re
 from time import sleep
+from typing import List, TypedDict
 
 import requests
 from bs4 import BeautifulSoup
 
-
-def getSoup(url: str):
-    sleep(1)
-    html = requests.get(url, "lxml")
-    html.encoding = "utf-8"
-    return BeautifulSoup(html.text, features="lxml")
-
-class Item(dict):
+class Item(TypedDict):
     title: str
 
 class Downloader:
@@ -75,18 +69,20 @@ class Downloader:
                 reg = r"【.*?】"
                 title: str = re.sub(reg, "", item.get("title"))
                 
+                # 统一符号
+                title = title.replace('•', '·')
+                title = title.replace('・', '·')
+                
                 self.dict_item.add(title)
                 count+=1
                 
                 # 拆分词条
-                if title.find('·') > -1:
-                    for word in title.split('·'):
-                        self.dict_item.add(word)
-                        count+=1
-                if title.find(' ') > -1:
-                    for word in title.split('·'):
-                        self.dict_item.add(word)
-                        count+=1
+                splitChar :List[str] = [' ', '·', '，']
+                for char in splitChar:
+                    if title.find(char) > -1:
+                        for word in title.split(char):
+                            self.dict_item.add(word)
+                            count += 1
             print(f"获取{channel}完毕，共{len(dataList)}条数据，写入{count}个词条")
 
         # 写入文件
