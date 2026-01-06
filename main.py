@@ -1,3 +1,4 @@
+import time
 from time import sleep
 
 from uilts.converter import Converter
@@ -7,12 +8,13 @@ from uilts.sogouDictConverter import SogouDictConverter
 downloadFile = "files/download.txt"
 outputFile = "files/genshin.dict.yaml"
 
+print("信息来源于米游社原神观测枢，感谢各大WIKI工作者的付出")
 print("开始获取信息")
-# downloader = Downloader(downloadFile)
-# downloader.getAll()
+downloader = Downloader(downloadFile)
+downloader.getAll()
 info = {
     "name": "genshin",
-    "version": "2024-12-16",
+    "version": time.strftime("%Y-%m-%d"),
     "sort": "by_weight"
 }
 print(info)
